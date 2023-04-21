@@ -1,38 +1,39 @@
-class CalculadoraInstalacao:
+class InstallationCalculator:
     def __init__(self):
-        self.metragens = []
-        self.tamanhos_rolos = []
-        self.qtd_cameras = {}
+        self.lengths = []
+        self.roll_sizes = []
+        self.camera_quantities = {}
 
-    def definir_metragens_cameras(self):
-        print("Digite as possíveis metragens de câmeras (separadas por vírgula):")
-        metragens_str = input().strip()
-        self.metragens = [int(m.strip()) for m in metragens_str.split(",")]
-        print(f"Metragens de câmeras definidas: {self.metragens}\n")
+    def set_camera_lengths(self):
+        print("Enter possible camera lengths (comma separated):")
+        lengths_str = input().strip()
+        self.lengths = [int(length.strip())
+                        for length in lengths_str.split(",")]
+        print(f"Camera lengths set: {self.lengths}\n")
 
-    def definir_tamanhos_rolos(self):
-        print("Digite os possíveis tamanhos de rolos (separados por vírgula):")
-        tamanhos_str = input().strip()
-        self.tamanhos_rolos = [int(t.strip()) for t in tamanhos_str.split(",")]
-        print(f"Tamanhos de rolos definidos: {self.tamanhos_rolos}\n")
+    def set_roll_sizes(self):
+        print("Enter possible roll sizes (comma separated):")
+        sizes_str = input().strip()
+        self.roll_sizes = [int(size.strip()) for size in sizes_str.split(",")]
+        print(f"Roll sizes set: {self.roll_sizes}\n")
 
-    def definir_qtd_cameras(self):
-        print("Digite a quantidade de câmeras para cada metragem:")
-        for metragem in self.metragens:
-            qtd = int(input(f"{metragem} metros: "))
-            self.qtd_cameras[metragem] = qtd
-        print(f"Quantidade de câmeras definida: {self.qtd_cameras}\n")
+    def set_camera_quantities(self):
+        print("Enter camera quantities for each length:")
+        for length in self.lengths:
+            quantity = int(input(f"{length} meters: "))
+            self.camera_quantities[length] = quantity
+        print(f"Camera quantities set: {self.camera_quantities}\n")
 
-    def obter_informacoes(self):
+    def get_information(self):
         return {
-            "metragens": self.metragens,
-            "tamanhos_rolos": self.tamanhos_rolos,
-            "qtd_cameras": self.qtd_cameras
+            "lengths": self.lengths,
+            "roll_sizes": self.roll_sizes,
+            "camera_quantities": self.camera_quantities
         }
 
 
-calc = CalculadoraInstalacao()
-calc.definir_metragens_cameras()
-calc.definir_tamanhos_rolos()
-calc.definir_qtd_cameras()
-info = calc.obter_informacoes()
+calc = InstallationCalculator()
+calc.set_camera_lengths()
+calc.set_roll_sizes()
+calc.set_camera_quantities()
+info = calc.get_information()
