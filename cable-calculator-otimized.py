@@ -78,7 +78,7 @@ class InstallationOtimized:
             self.organization,
         }
 
-    # FUNÇÃO CHAMADA POR install_organizer(self) -> ORGANIZA AS CAMERAS POR NOME
+    # FUNÇÃO CHAMADA POR install_organizer(self) -> ORGANIZA AS CAMERAS POR NOME # noqa E051
     def cam_list(self):
         # cria a lista e numeração das cameras
         cam_list = {}
@@ -92,19 +92,26 @@ class InstallationOtimized:
         # retorna a lista numerada das cameras
         return cam_list
 
-    # FUNÇÃO CHAMADA POR install_organizer(self) -> DEFINE O MELHOR GRUPO DE CAMERAS POR ROLO
+    # FUNÇÃO CHAMADA POR install_organizer(self) -> DEFINE O MELHOR GRUPO DE CAMERAS POR ROLO # noqa E051
     def define_cam(self, cam_list, rolls_size):
         best_combination = {}
         best_value = 0
-
+        # Inicia um loop que gera a quantidade de intens que podem ser combinados # noqa E051
         for i in range(1, len(cam_list)+1):
+            # usando o itertools gera todas as combinações possíveis
+            # i é o tamanho das combinações
             for combination in combinations(cam_list.items(), i):
+                # gera a variavel com o valor da soma dos valores de cada combinação # noqa E051
                 value = sum([v for k, v in combination])
+                # testa se o valor é menor igual ao rolo e maior que o melhor valor # noqa E051
                 if value <= rolls_size and value >= best_value:
+                    # atualiza lista e valores de comparação
                     best_combination = dict(combination)
                     best_value = value
+                    # se o valor for igual ao tamanho do rolo retorna imediatamente # noqa E051
                     if value == rolls_size:
                         return best_combination
+        # retorna a melhor combinação
         return best_combination
 
     # DEFINE A ORGANIZAÇÃO GERAL DE INSTALAÇÃO
