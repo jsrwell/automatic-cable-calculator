@@ -1,8 +1,12 @@
+import pprint
+
+
 class Installation:
     def __init__(self):
-        self.cameras = []
+        self.cameras = [150, 150, 150, 90, 90, 150, 90, 150, 90]
         self.rolls_size = 300
         self.scraps = []
+        self.organization = {}
 
     def add_cameras(self):
         print("Enter the camera cable lenght:")
@@ -20,11 +24,15 @@ class Installation:
         self.rolls_size = roll
 
     def get_list(self):
-        return {
-            "cameras": self.cameras,
+        index_cameras = [
+            (i, camera) for i, camera in enumerate(self.cameras)
+        ]
+        return pprint.pprint({
+            "cameras": index_cameras,
             "rolls_size": self.rolls_size,
-            "scraps": self.scraps
-        }
+            "scraps": self.scraps,
+            "organization": self.organization
+        })
 
     def organize_installation(self):
         cameras_avaliable = self.cameras
@@ -50,6 +58,7 @@ class Installation:
                 rolls_used[roll_number].append(
                     ('scraps', f'Sobra de {remaining_length} metros')
                 )
+                self.scraps.append(remaining_length)
             else:
                 rolls_used[roll_number].append(
                     ('scraps', 'Sem sobras')
@@ -57,10 +66,10 @@ class Installation:
 
             roll_number += 1
 
+        self.organization = rolls_used
         return rolls_used
 
 
 install = Installation()
-install.add_cameras()
-print(install.get_list()["cameras"])
-print(install.organize_installation())
+install.organize_installation()
+print(install.get_list())
