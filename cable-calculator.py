@@ -1,39 +1,66 @@
-class InstallationCalculator:
+class Installation:
     def __init__(self):
-        self.lengths = []
-        self.roll_sizes = []
-        self.camera_quantities = {}
+        self.cameras = []
+        self.rolls_size = 300
+        self.scraps = []
 
-    def set_camera_lengths(self):
-        print("Enter possible camera lengths (comma separated):")
-        lengths_str = input().strip()
-        self.lengths = [int(length.strip())
-                        for length in lengths_str.split(",")]
-        print(f"Camera lengths set: {self.lengths}\n")
+    def add_cameras(self):
+        print("Enter the camera cable lenght:")
+        camera_length = input().strip()
+        print(
+            f'How much cameras of the lenght {camera_length} you will need:'
+        )
+        camera_num = int(input().strip())
+        for _ in range(camera_num):
+            self.cameras.append(int(camera_length))
 
-    def set_roll_sizes(self):
-        print("Enter possible roll sizes (comma separated):")
-        sizes_str = input().strip()
-        self.roll_sizes = [int(size.strip()) for size in sizes_str.split(",")]
-        print(f"Roll sizes set: {self.roll_sizes}\n")
+    def set_roll(self):
+        print("Enter the roll size:")
+        roll = int(input().strip())
+        self.rolls_size = roll
 
-    def set_camera_quantities(self):
-        print("Enter camera quantities for each length:")
-        for length in self.lengths:
-            quantity = int(input(f"{length} meters: "))
-            self.camera_quantities[length] = quantity
-        print(f"Camera quantities set: {self.camera_quantities}\n")
-
-    def get_information(self):
+    def get_list(self):
         return {
-            "lengths": self.lengths,
-            "roll_sizes": self.roll_sizes,
-            "camera_quantities": self.camera_quantities
+            "cameras": self.cameras,
+            "rolls_size": self.rolls_size,
+            "scraps": self.scraps
         }
 
+    def organize_installation(self):
+        cameras_avaliable = self.cameras
+        cameras_avaliable.sort(reverse=True)
+        rolls_used = {}
+        roll_number = 1
+        cam_number = 1
 
-calc = InstallationCalculator()
-calc.set_camera_lengths()
-calc.set_roll_sizes()
-calc.set_camera_quantities()
-info = calc.get_information()
+        while len(cameras_avaliable) >= cam_number:
+            remaining_length = self.rolls_size
+            rolls_used[roll_number] = []
+
+            for i, camera in enumerate(cameras_avaliable):
+                if i >= cam_number-1:
+                    if camera <= remaining_length:
+                        rolls_used[roll_number].append(
+                            (cam_number, f'Camera de {camera} metros')
+                        )
+                        remaining_length -= camera
+                        cam_number += 1
+
+            if remaining_length > 0:
+                rolls_used[roll_number].append(
+                    ('scraps', f'Sobra de {remaining_length} metros')
+                )
+            else:
+                rolls_used[roll_number].append(
+                    ('scraps', 'Sem sobras')
+                )
+
+            roll_number += 1
+
+        return rolls_used
+
+
+install = Installation()
+install.add_cameras()
+print(install.get_list()["cameras"])
+print(install.organize_installation())
