@@ -1,7 +1,7 @@
 import pprint
 
 
-class Installation:
+class InstallationMajor:
     def __init__(self):
         self.cameras = [150, 150, 150, 90, 90, 150, 90, 150, 90]
         self.rolls_size = 300
@@ -70,6 +70,6 @@ class Installation:
         return rolls_used
 
 
-install = Installation()
+install = InstallationMajor()
 install.organize_installation()
-print(install.get_list())
+install.get_list()
