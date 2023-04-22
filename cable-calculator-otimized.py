@@ -4,12 +4,13 @@ import pprint
 
 class InstallationOtimized:
     def __init__(self):
-        self.cameras = {180: 2, 150: 1, 120: 3, 90: 2}
+        self.cameras = {150: 2, 130: 1, 110: 3, 90: 2, 60: 3}
         self.rolls_size = 300
         self.rolls_used = 0
         self.scraps = []
         self.organization = {}
 
+    # ADICIONAR CAMERAS AO OBJETO
     def add_cameras(self):
         # checagem para metragem das cameras a serem adicionadas
         print("Qual a metragem das cameras que você irá adicionar?")
@@ -27,6 +28,7 @@ class InstallationOtimized:
         # retorno com a lista atualizada
         print(self.cameras)
 
+    # DELETAR CAMERAS DO OBJETO
     def del_cameras(self):
         # checagem para metragem das cameras a serem adicionadas
         print("Qual a metragem das cameras que você procura?")
@@ -51,6 +53,7 @@ class InstallationOtimized:
         # retorno com a lista atualizada
         print(self.cameras)
 
+    # DEFINE O TAMANHO PADRÃO DOS ROLOS DO OBJETO
     def set_roll(self):
         # questiona novo tamanho informando o tamanho atual
         print(f'Qual o novo tamanho do rolo? (atual: {self.rolls_size})')
@@ -65,6 +68,7 @@ class InstallationOtimized:
         # retorno o tamanho do rolo
         print(self.rolls_size)
 
+    # RETORNA A LISTA COM TODOS OS DADOS DO OBJETO
     def get_list(self):
         return {
             self.cameras,
@@ -74,6 +78,7 @@ class InstallationOtimized:
             self.organization,
         }
 
+    # FUNÇÃO CHAMADA POR install_organizer(self) -> ORGANIZA AS CAMERAS POR NOME
     def cam_list(self):
         # cria a lista e numeração das cameras
         cam_list = {}
@@ -87,6 +92,7 @@ class InstallationOtimized:
         # retorna a lista numerada das cameras
         return cam_list
 
+    # FUNÇÃO CHAMADA POR install_organizer(self) -> DEFINE O MELHOR GRUPO DE CAMERAS POR ROLO
     def define_cam(self, cam_list, rolls_size):
         best_combination = {}
         best_value = 0
@@ -101,18 +107,29 @@ class InstallationOtimized:
                         return best_combination
         return best_combination
 
+    # DEFINE A ORGANIZAÇÃO GERAL DE INSTALAÇÃO
     def install_organizer(self):
+        # organiza a lista de cameras nomeando elas
         cam_list = self.cam_list()
         organizer = {}
-        roll = 1
-
+        roll = 0
+        # realiza a função enquanto houver itens dentro da lista de cameras
         while cam_list:
+            # numera o rolo
+            roll += 1
+            # acha a melhor combinação de cameras para menor sobra o possível
             defined = self.define_cam(cam_list, self.rolls_size)
-            organizer[roll] = defined
+            # atribui a melhor combinação a lista organizada
+            organizer[f'Rolo nº {roll}'] = defined
+            # deleta todos os itens da lista de cameras disponíveis
             for cam in defined.keys():
                 del cam_list[cam]
-            roll += 1
-
+            # adiciona as sobras
+            organizer[f'Rolo nº {roll}']['Sobra'] = self.rolls_size - \
+                sum(defined.values())
+        # define a organização do objeto
+        self.organization = organizer
+        # retorna a lista organizada dos rolos com cada camera e sobras
         return organizer
 
 
