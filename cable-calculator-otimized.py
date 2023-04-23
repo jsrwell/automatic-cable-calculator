@@ -71,11 +71,11 @@ class InstallationOtimized:
     # RETORNA A LISTA COM TODOS OS DADOS DO OBJETO
     def get_list(self):
         return {
-            self.cameras,
-            self.rolls_size,
-            self.rolls_used,
-            self.scraps,
-            self.organization,
+            'cameras': self.cameras,
+            'rolls_size': self.rolls_size,
+            'rolls_used': self.rolls_used,
+            'scraps': self.scraps,
+            'organization': self.organization,
         }
 
     # FUNÇÃO CHAMADA POR install_organizer(self) -> ORGANIZA AS CAMERAS POR NOME # noqa E051
@@ -134,11 +134,14 @@ class InstallationOtimized:
             # adiciona as sobras
             organizer[f'Rolo nº {roll}']['Sobra'] = self.rolls_size - \
                 sum(defined.values())
-        # define a organização do objeto
+        # define a organização do objeto, rolos usados e sobras
         self.organization = organizer
+        self.rolls_used = roll
+        self.scraps = [scrap['Sobra'] for scrap in organizer.values()]
         # retorna a lista organizada dos rolos com cada camera e sobras
         return organizer
 
 
 user = InstallationOtimized()
-pprint.pprint(user.install_organizer())
+user.install_organizer()
+pprint.pprint(user.get_list())
