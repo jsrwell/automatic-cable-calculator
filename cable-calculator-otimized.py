@@ -4,10 +4,15 @@ import pprint
 
 class InstallationOtimized:
     def __init__(self):
+        # Format: {INT Length: INT Qnt}
         self.cameras = {150: 2, 130: 1, 110: 3, 90: 2, 60: 3}
+        # Format: INT length
         self.rolls_size = 300
+        # Format: INT rolls
         self.rolls_used = 0
+        # Format: [INT length]
         self.scraps = []
+        # Format: {STR Name_Roll: {STR Name_Cam: INT length, STR Scraps: INT length}} # noqa E501
         self.organization = {}
 
     # ADICIONAR CAMERAS AO OBJETO
