@@ -22,7 +22,7 @@ class InstallationOtimized:
         pre_header = 3
         # lista completa da planilha
         table = pd.read_excel(tb_name, 'POSICIONAMENTO',
-                            header=None, skiprows=pre_header).values.tolist()
+                              header=None, skiprows=pre_header).values.tolist()
         # titulo do cabeçalho sendo procurado
         search_cam = 'CÂMERA'
         search_length = 'TOTAL'
@@ -33,11 +33,14 @@ class InstallationOtimized:
         camera_names = {}
         for i, cam in enumerate(table[1:-1]):
             if cam[index_cam].startwith('CF'):
-                camera_names[f'CF{int(cam[index_cam].replace("CF", "")).zfill(3)}'] = int(cam[index_length])
+                camera_names[f'CF{int(cam[index_cam].replace("CF", "")).zfill(3)}'] = int(
+                    cam[index_length])
             elif cam[index_cam].startwith('CD'):
-                camera_names[f'CD{int(cam[index_cam].replace("CD", "")).zfill(3)}'] = int(cam[index_length])
+                camera_names[f'CD{int(cam[index_cam].replace("CD", "")).zfill(3)}'] = int(
+                    cam[index_length])
             else:
-                camera_names[f'ID{str(i+1).zfill(3)} {cam[index_cam]}'] = int(cam[index_length])
+                camera_names[f'ID{str(i+1).zfill(3)} {cam[index_cam]}'] = int(
+                    cam[index_length])
         self.cameras = camera_names
         print(f'{len(camera_names)} listados.')
 
@@ -70,7 +73,7 @@ class InstallationOtimized:
                     # se o valor for igual ao tamanho do rolo retorna imediatamente # noqa E051
                     if value == rolls_size:
                         return best_combination
-                    #if i > 5:
+                    # if i > 5:
                     #    return best_combination
         # retorna a melhor combinação
         return best_combination
@@ -91,7 +94,8 @@ class InstallationOtimized:
                     list(cam_list.keys())[0]: int(list(cam_list.values())[0])
                 }
                 # adiciona os excessos
-                organizer[f'Rolo nº {str(roll).zfill(3)} Excedente']['Sobra'] = f'Excedente {self.rolls_size - int(list(cam_list.values())[0])}'
+                organizer[f'Rolo nº {str(roll).zfill(3)} Excedente'][
+                    'Sobra'] = f'Excedente {self.rolls_size - int(list(cam_list.values())[0])}'
                 # elimina item da lista
                 del cam_list[list(cam_list.keys())[0]]
             else:
@@ -112,12 +116,8 @@ class InstallationOtimized:
         # retorna a lista organizada dos rolos com cada camera e sobras
         return organizer
 
+
 tb_name = 'Teste.xlsx'
-#tb_name = 'DIST. DE CÂMERAS - TABOÃO DA SERRA CENTRO-CFTV.xlsx'
-#tb_name = 'DIST. DE CÂMERAS - ANHANGUERA-CFTV - HD - BRIFIENG.xlsx'
-#tb_name = 'DISTRIBUIÇÃO DE CÂMERAS - BOA VIAGEM.xlsx'
-#tb_name = 'DISTRIBUIÇÃO DE CÂMERAS - IPATINGA NOVA (1) (1).xlsx'
-#tb_name = 'DISTRIBUIÇÃO DE CÂMERAS - MARGINAL TIETE ETNA (1).xlsx'
 
 user = InstallationOtimized()
 user.table_cameras(tb_name)
