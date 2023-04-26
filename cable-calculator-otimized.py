@@ -55,7 +55,6 @@ class InstallationOtimized:
             else:
                 define_name = f'ID{str(i+1).zfill(3)} {i_name}'
             camera_names[define_name] = i_len
-            print(define_name)
         self.cameras = camera_names
         print(f'{len(camera_names)} listados.')
 
@@ -136,5 +135,7 @@ tb_name = 'test_table.xlsx'
 
 user = InstallationOtimized()
 user.table_cameras(tb_name)
+pprint.pprint(user.get_list()['cameras'])
 user.install_organizer()
 pprint.pprint(user.get_list()['organization'])
+pprint.pprint(user.get_list()['scraps'])
