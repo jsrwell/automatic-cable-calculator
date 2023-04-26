@@ -1,5 +1,6 @@
 from itertools import combinations
 import pprint
+import math
 import pandas as pd
 
 
@@ -22,7 +23,8 @@ class InstallationOtimized:
         pre_header = 3
         # lista completa da planilha
         table = pd.read_excel(tb_name, 'POSICIONAMENTO',
-                              header=None, skiprows=pre_header).values.tolist()
+                              header=None, skiprows=pre_header)
+        table = table.values.tolist()
         # titulo do cabeçalho sendo procurado
         search_cam = 'CÂMERA'
         search_length = 'TOTAL'
@@ -32,15 +34,28 @@ class InstallationOtimized:
         # listando todos os nomes de câmeras
         camera_names = {}
         for i, cam in enumerate(table[1:-1]):
-            if cam[index_cam].startwith('CF'):
-                camera_names[f'CF{int(cam[index_cam].replace("CF", "")).zfill(3)}'] = int(
-                    cam[index_length])
-            elif cam[index_cam].startwith('CD'):
-                camera_names[f'CD{int(cam[index_cam].replace("CD", "")).zfill(3)}'] = int(
-                    cam[index_length])
+            # variáveis para controle
+            i_name = cam[index_cam]
+            i_len = int(cam[index_length])
+            define_name = ''
+            # valida linhas com nan em float (não preenchidas)
+            if isinstance(i_name, float) and math.isnan(i_name):
+                define_name = 'Camera sem nome linha '
+                rownan = str(i+2+pre_header).zfill(3)
+                define_name += rownan
+            # procura cameras CF
+            elif (i_name).startswith('CF'):
+                define_name = int(i_name.replace('CF', ''))
+                define_name = f'CF{str(define_name).zfill(3)}'
+            # procura cameras CD
+            elif (i_name).startswith('CD'):
+                define_name = int(i_name.replace('CD', ''))
+                define_name = f'CD{str(define_name).zfill(3)}'
+            # saída padrão para excessões
             else:
-                camera_names[f'ID{str(i+1).zfill(3)} {cam[index_cam]}'] = int(
-                    cam[index_length])
+                define_name = f'ID{str(i+1).zfill(3)} {i_name}'
+            camera_names[define_name] = i_len
+            print(define_name)
         self.cameras = camera_names
         print(f'{len(camera_names)} listados.')
 
@@ -73,8 +88,6 @@ class InstallationOtimized:
                     # se o valor for igual ao tamanho do rolo retorna imediatamente # noqa E051
                     if value == rolls_size:
                         return best_combination
-                    # if i > 5:
-                    #    return best_combination
         # retorna a melhor combinação
         return best_combination
 
@@ -95,11 +108,11 @@ class InstallationOtimized:
                 }
                 # adiciona os excessos
                 organizer[f'Rolo nº {str(roll).zfill(3)} Excedente'][
-                    'Sobra'] = f'Excedente {self.rolls_size - int(list(cam_list.values())[0])}'
+                    'Sobra'] = f'Excede o tamanho do rolo em {int(list(cam_list.values())[0])- self.rolls_size} metros'  # noqa E501
                 # elimina item da lista
                 del cam_list[list(cam_list.keys())[0]]
             else:
-                # acha a melhor combinação de cameras para menor sobra o possível
+                # acha a melhor combinação de cameras para menor sobra o possível # noqa E501
                 defined = self.define_cam(cam_list, self.rolls_size)
                 # atribui a melhor combinação a lista organizada
                 organizer[f'Rolo nº {str(roll).zfill(3)}'] = defined
@@ -108,7 +121,7 @@ class InstallationOtimized:
                     del cam_list[cam]
                 # adiciona as sobras
                 organizer[f'Rolo nº {str(roll).zfill(3)}']['Sobra'] = self.rolls_size - \
-                    sum(defined.values())
+                   sum(defined.values())  # noqa E501
         # define a organização do objeto, rolos usados e sobras
         self.organization = organizer
         self.rolls_used = roll
@@ -117,10 +130,11 @@ class InstallationOtimized:
         return organizer
 
 
-tb_name = 'Teste.xlsx'
+# TEST AREA ################
+
+tb_name = 'test_table.xlsx'
 
 user = InstallationOtimized()
 user.table_cameras(tb_name)
-pprint.pprint(user.get_list()['cameras'])
 user.install_organizer()
-pprint.pprint(user.get_list())
+pprint.pprint(user.get_list()['organization'])
